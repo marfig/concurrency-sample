@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OrdersProcessor.Hubs;
 using OrdersProcessor.Services;
 
 namespace OrdersProcessor
@@ -22,6 +23,8 @@ namespace OrdersProcessor
             services.AddControllersWithViews();
 
             services.AddTransient<IOrderProcessorService, OrderProcessorService>();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +49,7 @@ namespace OrdersProcessor
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<OrderHub>("/orderhub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

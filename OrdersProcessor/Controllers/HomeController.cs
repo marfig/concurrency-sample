@@ -4,16 +4,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using OrdersProcessor.Services;
+using Microsoft.AspNetCore.SignalR;
+using OrdersProcessor.Hubs;
 
 namespace OrdersProcessor.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IOrderProcessorService _serviceProcessor;
+        private readonly IHubContext<OrderHub> orderHub;
 
-        public HomeController(IOrderProcessorService serviceProcessor)
+        public HomeController(IOrderProcessorService serviceProcessor, IHubContext<OrderHub> orderHub)
         {
             _serviceProcessor = serviceProcessor;
+            this.orderHub = orderHub;
         }
 
         public IActionResult Index()
@@ -50,7 +54,7 @@ namespace OrdersProcessor.Controllers
 
         private void ReportOrdersProgress(int percent)
         {
-            Console.WriteLine($"progress: {percent} %");
+            orderHub.Clients.All.SendAsync("ReceiveProgress", percent);
         }
     }
 }
