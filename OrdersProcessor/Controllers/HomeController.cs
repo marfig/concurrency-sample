@@ -23,6 +23,8 @@ namespace OrdersProcessor.Controllers
 
         public async Task<JsonResult> ProcessOrders()
         {
+            var reportProgress = new Progress<int>(ReportOrdersProgress);
+
             int countOrders = 2500;
             var orders = await _serviceProcessor.GetOrdersAsync(countOrders);
             var stopWatch = new Stopwatch();
@@ -32,7 +34,7 @@ namespace OrdersProcessor.Controllers
 
             try
             {
-                rejected = await _serviceProcessor.ProcessOrdersAsync(orders);
+                rejected = await _serviceProcessor.ProcessOrdersAsync(orders, reportProgress);
 
                 countOrders -= rejected.Count;
             }
@@ -44,6 +46,11 @@ namespace OrdersProcessor.Controllers
             stopWatch.Stop();
 
             return Json(new { Message = $"{countOrders} orders processed in {stopWatch.ElapsedMilliseconds / 1000} seconds", Rejected = rejected });
+        }
+
+        private void ReportOrdersProgress(int percent)
+        {
+            Console.WriteLine($"progress: {percent} %");
         }
     }
 }

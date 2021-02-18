@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -35,7 +36,7 @@ namespace OrdersProcessor.Services
             });
         }
 
-        public async Task<List<string>> ProcessOrdersAsync(List<string> orders)
+        public async Task<List<string>> ProcessOrdersAsync(List<string> orders, IProgress<int> progress = null)
         {
             using var semaphore = new SemaphoreSlim(1000);
 
@@ -57,7 +58,21 @@ namespace OrdersProcessor.Services
                 }
             }).ToList();
 
-            var responses = await Task.WhenAll(listTasks);
+            var responsesTasks = Task.WhenAll(listTasks);
+
+            if (progress != null)
+            {
+                while (await Task.WhenAny(responsesTasks, Task.Delay(1000)) != responsesTasks)
+                {
+                    var tasksCompleted = listTasks.Count(x => x.IsCompleted);
+                    var percent = (double)tasksCompleted / orders.Count;
+                    percent *= 100;
+                    var percentRound = (int)Math.Round(percent, 0);
+                    progress.Report(percentRound);
+                }
+            }
+
+            var responses = await responsesTasks;
 
             var rejectedOrders = new List<string>();
 
