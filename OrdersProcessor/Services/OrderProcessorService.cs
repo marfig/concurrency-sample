@@ -62,7 +62,7 @@ namespace OrdersProcessor.Services
 
             if (progress != null)
             {
-                while (await Task.WhenAny(responsesTasks, Task.Delay(1000)) != responsesTasks)
+                while (await Task.WhenAny(responsesTasks, Task.Delay(500)) != responsesTasks)
                 {
                     var tasksCompleted = listTasks.Count(x => x.IsCompleted);
                     var percent = (double)tasksCompleted / orders.Count;

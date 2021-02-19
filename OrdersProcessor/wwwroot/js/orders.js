@@ -1,10 +1,7 @@
 ﻿document.getElementById("btnProcess").addEventListener("click", ProcessOrders);
 
 async function ProcessOrders() {
-    document.getElementById("lblProgress").innerHTML = 0;
-    document.getElementById("divResult").innerHTML = "";
-    document.getElementById("lblMessage").innerHTML = "";
-    document.getElementById("divLoading").classList.remove("hide");
+    CleanElements();
 
     const url = "/home/processorders";
 
@@ -20,6 +17,7 @@ async function ProcessOrders() {
     document.getElementById("lblMessage").innerHTML = result.message;
 
     document.getElementById("lblProgress").innerHTML = 100;
+    document.getElementById("progress-bar").style.width = "100%";
 
     document.getElementById("divResult").innerHTML = `<strong>Rejected Orders (${result.rejected.length})</strong>`;
 
@@ -29,4 +27,15 @@ async function ProcessOrders() {
     }
 
     document.getElementById("divLoading").classList.add("hide");
+    document.getElementById("btnProcess").disabled = false;
+}
+
+function CleanElements() {
+    document.getElementById("lblProgress").innerHTML = 0;
+    document.getElementById("divResult").innerHTML = "";
+    document.getElementById("lblMessage").innerHTML = "";
+    document.getElementById("divLoading").classList.remove("hide");
+    document.getElementById("divProgress").classList.remove("hide");
+    document.getElementById("progress-bar").style.width = "0";
+    document.getElementById("btnProcess").disabled = true;
 }

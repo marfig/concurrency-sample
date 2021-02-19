@@ -54,7 +54,7 @@ namespace OrdersProcessor.Controllers
 
         private void ReportOrdersProgress(int percent)
         {
-            orderHub.Clients.All.SendAsync("ReceiveProgress", percent);
+            orderHub.Clients.Caller.SendAsync("ReceiveProgress", percent);
         }
     }
 }

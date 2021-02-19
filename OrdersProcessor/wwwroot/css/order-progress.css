@@ -1,0 +1,10 @@
+﻿.progress-background {
+    border: solid 1px #111010;
+    width: 400px;
+    padding: 1px;
+}
+
+#progress-bar {
+    height: 30px;
+    background-color: #00f72b;
+}

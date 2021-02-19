@@ -16,8 +16,13 @@
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div id="divProgress" class="col-md-12 hide">
         <strong>Progress: </strong><label id="lblProgress">0</label><span>%</span>
+        <div class="progress-background">
+            <div id="progress-bar" style="width: 0">
+
+            </div>
+        </div>
     </div>
     <div class="col-md-12">
         <label id="lblMessage"></label>
@@ -29,4 +34,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
     <script src="~/js/orders_progress.js"></script>
     <script src="~/js/orders.js"></script>
+    <link href="~/css/order-progress.css" rel="stylesheet" />
 }
