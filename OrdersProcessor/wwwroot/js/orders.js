@@ -3,7 +3,9 @@
 async function ProcessOrders() {
     CleanElements();
 
-    const url = "/home/processorders";
+    const connId = document.getElementById("ConnectionId").value;
+
+    const url = `/home/processorders?ConnectionID=${connId}`;
 
     const response = await fetch(url, {
         headers: {

@@ -13,6 +13,7 @@ namespace OrdersProcessor.Controllers
     {
         private readonly IOrderProcessorService _serviceProcessor;
         private readonly IHubContext<OrderHub> orderHub;
+        private string connectionId;
 
         public HomeController(IOrderProcessorService serviceProcessor, IHubContext<OrderHub> orderHub)
         {
@@ -25,11 +26,13 @@ namespace OrdersProcessor.Controllers
             return View();
         }
 
-        public async Task<JsonResult> ProcessOrders()
+        public async Task<JsonResult> ProcessOrders(string ConnectionID)
         {
+            connectionId = ConnectionID;
+
             var reportProgress = new Progress<int>(ReportOrdersProgress);
 
-            int countOrders = 2500;
+            int countOrders = 1500;
             var orders = await _serviceProcessor.GetOrdersAsync(countOrders);
             var stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -54,7 +57,7 @@ namespace OrdersProcessor.Controllers
 
         private void ReportOrdersProgress(int percent)
         {
-            orderHub.Clients.Caller.SendAsync("ReceiveProgress", percent);
+            orderHub.Clients.Client(connectionId).SendAsync("ReceiveProgress", percent);
         }
     }
 }

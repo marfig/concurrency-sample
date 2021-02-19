@@ -4,5 +4,9 @@ namespace OrdersProcessor.Hubs
 {
     public class OrderHub: Hub
     {
+        public string GetConnectionId()
+        {
+            return Context.ConnectionId;
+        }
     }
 }
